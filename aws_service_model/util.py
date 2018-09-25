@@ -1,5 +1,18 @@
 import itertools
 from copy import deepcopy
+import json
+
+
+class JSONStringEncoder(json.JSONEncoder):
+    def default(self, obj):  # pylint: disable=E0202
+        try:
+            return json.JSONEncoder.default(self, obj)
+        except TypeError:
+            return str(obj)
+
+
+def json_repr_dump(obj):
+    return json.dumps(obj, cls=JSONStringEncoder)
 
 
 class All(object):
@@ -16,14 +29,18 @@ class All(object):
         return "All"
 
 
-class Filter(object):
-    def __init__(self, filters):
-        self.filters = filters
+class Mutator(object):
+    def __init__(self, lambdas):
+        self.lambdas = lambdas
 
     def apply(self, val):
-        ret = deepcopy(val)
-        for f in self.filters:
-            ret = f(ret)
+        try:
+            ret = deepcopy(val)
+        except TypeError:
+            ret = val
+
+        for l in self.lambdas:
+            ret = l(ret)
         return ret
 
 
@@ -35,7 +52,7 @@ def labeled_product(iterables, include_empty=False):
     values = [iterables[k] for k in keys]
     for p in itertools.product(*values):
         yield dict(zip(keys, p))
-    if include_empty:
+    if include_empty and len(values) == 0:
         yield dict()
 
 
