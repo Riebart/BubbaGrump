@@ -55,7 +55,7 @@ if __name__ == "__main__":
             if resp is not None:
                 op.output().populate(resp, 𝔻)
                 success = True
-        
+
         # Remove the starter ops that succeeded from the ops we'll try later.
         if success:
             read_only_operations.remove(op)
@@ -77,13 +77,14 @@ if __name__ == "__main__":
                         successes.add(rop)
             except InsufficientMembersException as e:
                 print(e, file=sys.stderr)
-        
+
         # For any operation that succeeded, remove it from the list and try the rest again.
         for op in successes:
             read_only_operations.remove(op)
-        
+
         # If nothing succeeded this round, then nothing will succeed next round either, so quit.
         if successes == set():
             break
-    
+        print("=====")
+
     # print(𝕌)

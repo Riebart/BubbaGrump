@@ -98,9 +98,13 @@ OPERATION_BLACKLIST = {
 # For aliasing a shape name to something other than teh default of type=string
 SHAPE_ALIASES = {}
 
+# For each service, define a set of mappings that map from a particular value, when seen, to a wrapped
+# value that encapsulates that value.
+#
+# For the "*" key of a service, perform that mapping for any method, for all other keys, use that
+# mapping for only that API method's shapes.
 MEMBER_SHAPE_REPLACEMENTS = {
     "apigateway": {
-        # For every structure in the API Gateway model, replace any member named restApiId
         "*": {
             "restApiId": "RestApiIdType",
             "authorizerId": "AuthorizerApiIdType",
@@ -131,6 +135,9 @@ MEMBER_SHAPE_REPLACEMENTS = {
     }
 }
 
+# When constructing images, there are certain transforms that will be required. Such as ensuring that
+# a list returned from one method is broken into lists an appropriate length for use as the inputs
+# of another API method.
 IMAGE_CONSTRUCTION_TRANSFORMS = {
     "iam": {
         "SimulationPolicyListType":
@@ -141,6 +148,9 @@ IMAGE_CONSTRUCTION_TRANSFORMS = {
     }
 }
 
+# When manifesting entities in a domain, some entities are not fully birthed by the API endpoints
+# in a way that is consistent for use with other API methods. THis performs additional transformation
+# of the output of those API methods before manifesting the entity.
 ENTITY_MANIFESTATION_TRANSFORMS = {
     "iam": {
         "policyDocumentType":
