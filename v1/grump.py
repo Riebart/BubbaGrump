@@ -35,7 +35,10 @@ if __name__ == "__main__":
     read_only_operations = [op for op in operations if read_only_op_filter(op)]
 
     # Look for any operations where the requirements list is empty
-    starter_ops = [op for op in read_only_operations if op.input().requirements() == dict()]
+    starter_ops = [
+        op for op in read_only_operations
+        if op.input().requirements() == dict()
+    ]
 
     # Define the domain of known entities, initialized to empty.
     𝕌 = Domain()
