@@ -26,8 +26,8 @@ if __name__ == "__main__":
     botocore_directory = None if len(sys.argv) < 3 else sys.argv[2]
 
     # Create the service abstraction
-    service = AWSService(
-        service_name=service_name, botocore_directory=botocore_directory)
+    service = AWSService(service_name=service_name,
+                         botocore_directory=botocore_directory)
 
     operations = service.get_operations()
 

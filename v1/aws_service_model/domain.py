@@ -7,7 +7,6 @@ class Entity(object):
     """
     A hashable tree node that can have multiple parent links. Useful for tracing the lineage of a given entity backwards, but not forwards.
     """
-
     def __init__(self, image, parents):
         self.image = image
         self.parents = parents
@@ -56,7 +55,6 @@ class Domain(object):
 
     Domains are disjoint structures that encode namespaces for the existence of entities. Domains are rooted at an entity that exists in the enclosing domain. Searching a domain for entities will not return entities in another domain, even those that are sub-dimensions of the searched domain. An entity, however, can have a lineage that traces across arbitrary domains. This makes it possible to encode how a domain was spawned by finding the entities in that domain that trace their lineage outside of the given domain.
     """
-
     def __init__(self, entity=None):
         self.root_entity = entity
         self.dimensions = dict()

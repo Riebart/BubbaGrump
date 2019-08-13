@@ -45,8 +45,8 @@ class Shape(object):
         # Create a dimension for this shape type, implicitly creating an Entity in the dimension() call.
         𝕊 = domain.dimension(self.name())
         # Manifest this entity in the dimension for this shape.
-        ent = 𝕊.manifest(
-            image=image, parents=[] if parent is None else [parent])
+        ent = 𝕊.manifest(image=image,
+                         parents=[] if parent is None else [parent])
         # Return the entity for this shape image for use as the parent for future images.
         return ent
 
@@ -148,7 +148,6 @@ class Alias(Shape):
 
     Shapes wrapped in an alias will appear in every natural dimension of a domain, as well as the aliased ones.
     """
-
     def __init__(self, shape_name, service):
         super().__init__(shape_name, service)
         self.child_shape = self.service.get_shape(self.shape["shape"])
@@ -298,8 +297,9 @@ class Request(Structure):
                 list(self.requirements().keys()), list(params.keys()))
 
         # When producing our product, if the requirements list is empty then also permit an empty kwargs in the cross-product
-        return labeled_product(
-            params, include_empty=(len(self.requirements().keys()) == 0))
+        return labeled_product(params,
+                               include_empty=(len(
+                                   self.requirements().keys()) == 0))
 
 
 class Response(Structure):

@@ -1,33 +1,24 @@
 #!/usr/bin/env python3
 
-import botocore.session
-import re
+import json
+from aws_api_model import AWSAPIModel
+from util import json_str_dumps
 
-import kanren
-from kanren import Relation, facts, var, conde, run
-
-provides = Relation("provides")
-requires = Relation("requires")
+service_names = ["acm", "apigateway"]
+regions = ["ca-central-1", "us-east-1"]
 
 
-def satisfies(source, sink):
-    pass
+def main():
+    # First, ask for the global API model without specifying that it should be restricted to a region or a service.
+    # This will trigger a parsing of the shapes and operations for each service.
+    api_model = AWSAPIModel(service_names=service_names, regions=regions)
+
+    # print(json_str_dumps(api_model.api_model))
+    for service_name in service_names:
+        api_model.build_execution_plan(
+            service_name, lambda op_name: op_name.startswith("Get") or op_name.
+            startswith("List") or op_name.startswith("Describe"))
 
 
-api_model = dict()
-session = botocore.session.get_session()
-for service_name in session.get_available_services():
-    api_version = session.get_config_variable("api_versions").get(
-        service_name, [None])[-1]
-    regions = session.get_available_regions(service_name)
-    api_model[service_name] = dict(regions=regions, operations=dict())
-    for region in regions:
-        service_model = session.get_service_model(service_name,
-                                                  api_version=api_version)
-        for op_name in [
-                op for op in list(service_model.operation_names)
-                if re.match(r"^(Get|List|Describe)", op)
-        ]:
-            op_model = service_model.operation_model(op_name)
-            api_model[service_name]["operations"][op_name] = dict(
-                model=op_model)
+if __name__ == "__main__":
+    main()
