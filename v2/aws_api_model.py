@@ -6,6 +6,7 @@ import botocore.session
 from util import Any
 from shapes import ShapeDomain, Lineage
 from collections import namedtuple
+import special_cases
 
 
 class AWSAPIModel(object):

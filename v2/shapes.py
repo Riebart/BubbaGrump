@@ -187,8 +187,22 @@ class ShapeDomain(object):
 
 
 class Alias(Shape):
-    pass
+    def __init__(self, shape_name, base_shape):
+        self.name = shape_name
+        self.type = "alias""
 
+        # There are some metadata elements, though, that do not get observed consistently (I'm looking at you, idempotencyToken on a4b.ClientRequestToken), and so we strip them from the metadata entirely, and transpose them into a non-canonical hint.
+        self.hints = dict()
+        for hint in Shape.HINT_METADATA:
+            if hint in self.metadata:
+                self.hints[hint] = self.metadata[hint]
+                del self.metadata[hint]
+
+        # OPTDO: Split the entities into the ShapeDomain (passed around) and not embedded in the Shape instance.
+        self.𝔼 = list()  # The set of all instances of this shape
+
+        if autobuild:
+            self.build()
 
 class Structure(Shape):
     EMPTY = dict()
